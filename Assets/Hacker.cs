@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class Hacker : MonoBehaviour
 {
+    // Game configuration data
+    string[] level1Password = { "worek", "klocki", "kredka", "szatnia", "kapcie", "zabawa" };
+    string[] level2Password = {"toyota", "wetrynarz","zwierzak", "lekarstwo", "przedstawiciel"};
+
+    // Game state
     int level;
     string password;
     enum Screen { MainMenu, Password,Win }
@@ -56,27 +61,23 @@ public class Hacker : MonoBehaviour
         }
         else
         {
-            Terminal.WriteLine("Sprobuj jeszcze raz");
+            Terminal.WriteLine("Nieprawidlowe haslo");
+            Terminal.WriteLine("Sprobuj jeszcze raz lub wpisz menu");
         }
     }
 
     void RunMainMenu(string input)
     {
-        if (input == "tosia")
+        bool isValidNumber = (input=="1" || input =="2");
+        if (isValidNumber)
+        {
+            level = int.Parse(input);
+            StartGame();
+        }
+
+        else if (input == "tosia") // Easter egg
         {
             ShowMainMenu("Czesc Tosiu");
-        }
-        else if (input == "1")
-        {
-            level = 1;
-            password = "worek";
-            StartGame();
-        }
-        else if (input == "2")
-        {
-            level = 2;
-            password = "toyota";
-            StartGame();
         }
         else
         {
@@ -87,8 +88,21 @@ public class Hacker : MonoBehaviour
     void StartGame()
     {
         currentScreen = Screen.Password;
+        Terminal.ClearScreen();
+        switch (level)
+        {
+            case 1:
+                password = level1Password[2]; // TODO randomize
+                break;
+            case 2:
+                password = level2Password[3]; // TODO randomize
+                break;
+            default:
+                Debug.LogError("Invalid level number");
+                break;
+        }
 
-        Terminal.WriteLine("Wybrałeś poziom " + level);
+        Terminal.WriteLine("Podaj haslo");
     }
 
     // Update is called once per frame
