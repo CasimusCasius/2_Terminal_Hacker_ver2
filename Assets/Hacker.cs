@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Hacker : MonoBehaviour
 {
@@ -56,14 +53,18 @@ public class Hacker : MonoBehaviour
     {
         if (input == password)
         {
-            Terminal.WriteLine("Wygrales poziom " + level);
-            currentScreen = Screen.Win;
+            WinScreen();
         }
         else
         {
-            Terminal.WriteLine("Nieprawidlowe haslo");
-            Terminal.WriteLine("Sprobuj jeszcze raz lub wpisz menu");
+            AskForPassword();
         }
+    }
+
+    void WinScreen()
+    {
+        Terminal.WriteLine("Wygrales poziom " + level);
+        currentScreen = Screen.Win;
     }
 
     void RunMainMenu(string input)
@@ -72,7 +73,7 @@ public class Hacker : MonoBehaviour
         if (isValidNumber)
         {
             level = int.Parse(input);
-            StartGame();
+            AskForPassword();
         }
 
         else if (input == "tosia") // Easter egg
@@ -85,30 +86,29 @@ public class Hacker : MonoBehaviour
         }
     }
 
-    void StartGame()
+    void AskForPassword()
     {
+
         currentScreen = Screen.Password;
         Terminal.ClearScreen();
+        SetRandomPassword();
+        Terminal.WriteLine("Podaj haslo, podpowiedz: " + password.Anagram());
+    }
+
+    private void SetRandomPassword()
+    {
         switch (level)
         {
             case 1:
-                password = level1Password[2]; // TODO randomize
+                password = level1Password[Random.Range(0, level1Password.Length)];
                 break;
             case 2:
-                password = level2Password[3]; // TODO randomize
+                password = level2Password[Random.Range(0, level2Password.Length)];
                 break;
             default:
                 Debug.LogError("Invalid level number");
                 break;
         }
-
-        Terminal.WriteLine("Podaj haslo");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    
-        
-    }
 }
